@@ -1,8 +1,9 @@
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.Keys;
 
 import java.time.Duration;
 
-import static com.codeborne.selenide.Condition.exactText;
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selectors.withText;
@@ -16,22 +17,23 @@ public class FormTest {
 
         open("http://localhost:9999");
         $("[data-test-id=city] input").setValue(testData.getCity());
-        $$(".menu").find(exactText(testData.getCity())).click();
-        $("[data-test-id=date]").click();
-        $$(".calendar__day").find(exactText(testData.getDayOfMonth())).click();
+        $("[data-test-id=date] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
+        String firstDate = "23.08.2023";
+        $("[data-test-id=date] input").setValue(firstDate);
         $("[data-test-id=name] input").setValue(testData.getName());
         $("[data-test-id=phone] input").setValue(testData.getPhone());
         $("[data-test-id=agreement]").click();
         $(byText("Запланировать")).click();
-        $(withText("Успешно")).shouldBe(visible, Duration.ofSeconds(15));
+        $("[data-test-id=success-notification]").shouldBe(visible, Duration.ofSeconds(15)).shouldHave(text("Встреча успешно запланирована на " + firstDate));
 
         $("[data-test-id=date]").click();
-        $$(".calendar__day").find(exactText(String.valueOf(Integer.parseInt(testData.getDayOfMonth()) + 1))).click();
+        String secondDate = "28.08.2023";
+        $("[data-test-id=date] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
+        $("[data-test-id=date] input").setValue(secondDate);
         $(byText("Запланировать")).click();
 
-        $(withText("Перепланировать")).shouldBe(visible, Duration.ofSeconds(15));
-        $(byText("Перепланировать")).click();
+        $(withText("Перепланировать")).shouldBe(visible, Duration.ofSeconds(15)).click();
 
-        $(withText("Успешно")).shouldBe(visible, Duration.ofSeconds(15));
+        $("[data-test-id=success-notification]").shouldBe(visible, Duration.ofSeconds(15)).shouldHave(text("Встреча успешно запланирована на " + secondDate));
     }
 }
