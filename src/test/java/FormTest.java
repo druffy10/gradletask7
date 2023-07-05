@@ -18,7 +18,7 @@ public class FormTest {
         open("http://localhost:9999");
         $("[data-test-id=city] input").setValue(testData.getCity());
         $("[data-test-id=date] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
-        String firstDate = "23.08.2023";
+        String firstDate = TestDataGenerator.generateDate(4);
         $("[data-test-id=date] input").setValue(firstDate);
         $("[data-test-id=name] input").setValue(testData.getName());
         $("[data-test-id=phone] input").setValue(testData.getPhone());
@@ -27,7 +27,7 @@ public class FormTest {
         $("[data-test-id=success-notification]").shouldBe(visible, Duration.ofSeconds(15)).shouldHave(text("Встреча успешно запланирована на " + firstDate));
 
         $("[data-test-id=date]").click();
-        String secondDate = "28.08.2023";
+        String secondDate = TestDataGenerator.generateDate(7);
         $("[data-test-id=date] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("[data-test-id=date] input").setValue(secondDate);
         $(byText("Запланировать")).click();

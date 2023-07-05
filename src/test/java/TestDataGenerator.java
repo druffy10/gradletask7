@@ -1,6 +1,8 @@
 import com.github.javafaker.Faker;
 import lombok.Value;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class TestDataGenerator {
@@ -22,5 +24,8 @@ public class TestDataGenerator {
                 faker.name().fullName(),
                 faker.phoneNumber().subscriberNumber(10)
         );
+    }
+    public static String generateDate(int days) {
+        return LocalDate.now().plusDays(days).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
     }
 }
